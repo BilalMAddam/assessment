@@ -1,0 +1,17 @@
+# In this schema, each invoice is guaranteed to have a CustomerId, so an inner join allows us to retrieve the customer’s name associated with each invoice.
+#The ReferredBy column in the Customers table refers to another customer within the same table.
+#To ensure we list all invoices, even those without a referrer, we use a LEFT JOIN to check for a referring customer and retrieve their name if available.
+#This way, invoices without a referrer will still appear in the results, with the ReferrerName shown as NULL.
+
+SELECT
+    i.Id AS InvoiceId,
+    i.BillingDate,
+    c1.Name AS CustomerName,
+    c2.Name AS ReferrerName
+FROM
+    Invoices i
+INNER JOIN
+    Customers c1 ON i.CustomerId = c1.Id
+LEFT JOIN
+    Customers c2 on c1.ReferredBy = c2.Id
+ORDER BY i.BillingDate ASC
